@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { useEffect, useState } from "react";
 import { skillClusters } from "@/lib/data";
 import { cn } from "@/lib/utils";
 
@@ -38,6 +39,12 @@ export default function TechStack() {
 }
 
 function SkillCard({ cluster, index }: { cluster: any; index: number }) {
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
   // Bento grid-like spans
   const spans = [
     "md:col-span-2 md:row-span-2", // AI
@@ -58,8 +65,8 @@ function SkillCard({ cluster, index }: { cluster: any; index: number }) {
         spans[index % spans.length]
       )}
     >
-      {/* Background Neural Animation for first card */}
-      {index === 0 && (
+      {/* Background Neural Animation for first card - Client Only to prevent hydration mismatch */}
+      {index === 0 && isMounted && (
          <div className="absolute top-0 right-0 w-32 h-32 opacity-20 group-hover:opacity-40 transition-opacity">
             <svg viewBox="0 0 100 100" className="w-full h-full text-accent">
                <motion.circle 
