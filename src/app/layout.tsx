@@ -22,12 +22,12 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Shubham Rathod | AI Context Engineer",
-  description: "Explore the portfolio of Shubham Rathod, an AI Context Engineer passionate about AI/ML development and innovative solutions.",
+  title: "Shubham Rathod | AI Engineer",
+  description: "Explore the portfolio of Shubham Rathod, an AI Engineer passionate about AI/ML development and innovative solutions.",
   keywords: ["Shubham Rathod", "AI", "Machine Learning", "Portfolio", "Engineer"],
   openGraph: {
-    title: "Shubham Rathod | AI Context Engineer",
-    description: "Building the future of AI Context and Intelligent Systems.",
+    title: "Shubham Rathod | AI Engineer",
+    description: "Building the future of AI  and Intelligent Systems.",
     type: "website",
     locale: "en_US",
     url: "https://shubhamrathod.dev", // Placeholder
