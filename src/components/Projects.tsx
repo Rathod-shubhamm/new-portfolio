@@ -107,13 +107,30 @@ function ProjectCard({ project, index }: { project: any; index: number }) {
             {project.description}
           </p>
 
-          <div className="flex flex-wrap gap-3">
-             {project.metrics.map((metric: string) => (
-                <div key={metric} className="px-4 py-2 rounded-full bg-white/5 backdrop-blur-md border border-white/10 flex items-center gap-2">
-                   <div className="w-1 h-1 rounded-full bg-accent animate-pulse" />
-                   <span className="text-[9px] uppercase tracking-widest font-bold text-white">{metric}</span>
-                </div>
-             ))}
+          <div className="pt-4 space-y-4">
+            <div className="flex flex-wrap gap-3">
+               {project.metrics.map((metric: string) => (
+                  <div key={metric} className="px-4 py-2 rounded-full bg-white/5 backdrop-blur-md border border-white/10 flex items-center gap-2">
+                     <div className="w-1 h-1 rounded-full bg-accent animate-pulse" />
+                     <span className="text-[9px] uppercase tracking-widest font-bold text-white">{metric}</span>
+                  </div>
+               ))}
+            </div>
+            
+            {/* Hidden technical specs revealed on hover */}
+            <div className="h-0 group-hover:h-auto opacity-0 group-hover:opacity-100 transition-all duration-700 overflow-hidden space-y-3 pt-2">
+               <div className="h-px bg-white/5 w-full" />
+               <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <span className="block text-[8px] uppercase tracking-widest text-slate-500 font-bold mb-1">Architecture</span>
+                    <span className="text-[10px] text-white font-mono uppercase">RAG + Semantic Search</span>
+                  </div>
+                  <div>
+                    <span className="block text-[8px] uppercase tracking-widest text-slate-500 font-bold mb-1">Stack</span>
+                    <span className="text-[10px] text-white font-mono uppercase">LLM / Vector DB</span>
+                  </div>
+               </div>
+            </div>
           </div>
 
           <div className="flex items-center gap-6 pt-4">

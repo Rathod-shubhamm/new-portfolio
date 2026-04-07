@@ -5,6 +5,7 @@ import Hero from "@/components/Hero";
 import About from "@/components/About";
 import TechStack from "@/components/TechStack";
 import Projects from "@/components/Projects";
+import ProcessFlow from "@/components/ProcessFlow";
 import Timeline from "@/components/Timeline";
 import Footer from "@/components/Footer";
 import { motion } from "framer-motion";
@@ -34,6 +35,10 @@ export default function Home() {
         
         <div id="projects">
           <Projects />
+        </div>
+
+        <div id="process">
+          <ProcessFlow />
         </div>
         
         <div id="experience">

@@ -80,6 +80,26 @@ function SkillCard({ cluster, index }: { cluster: any; index: number }) {
             </span>
           ))}
         </div>
+        
+        {/* Debug Specs revealed on hover */}
+        <div className="h-0 group-hover:h-auto opacity-0 group-hover:opacity-100 transition-all duration-700 overflow-hidden pt-4">
+           <div className="space-y-3">
+              <div className="flex justify-between items-center text-[8px] uppercase tracking-widest font-bold">
+                 <span className="text-slate-500">Confidence Score</span>
+                 <span className="text-accent">0.982</span>
+              </div>
+              <div className="w-full h-1 bg-white/5 rounded-full overflow-hidden">
+                 <motion.div 
+                    initial={{ width: 0 }}
+                    whileInView={{ width: "98%" }}
+                    className="h-full bg-accent/40"
+                 />
+              </div>
+              <p className="text-[8px] text-slate-600 uppercase tracking-[0.2em] leading-relaxed">
+                 Expertise in transformer-based architectures, RAG optimization, and autonomous agent orchestration.
+              </p>
+           </div>
+        </div>
       </div>
     </motion.div>
   );

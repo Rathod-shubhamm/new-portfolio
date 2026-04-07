@@ -8,6 +8,7 @@ import { siteConfig } from "@/lib/data";
 const NAV_ITEMS = [
   { name: "About", href: "#about" },
   { name: "Skills", href: "#skills" },
+  { name: "Process", href: "#process" },
   { name: "Projects", href: "#projects" },
   { name: "Experience", href: "#experience" },
   { name: "Contact", href: "#contact" },

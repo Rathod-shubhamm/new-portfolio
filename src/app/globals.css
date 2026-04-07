@@ -77,6 +77,39 @@ body::after {
   @apply glass rounded-3xl p-8 hover:border-white/20 transition-all duration-500;
 }
 
+@utility scanline {
+  position: relative;
+  overflow: hidden;
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    height: 100%;
+    width: 100%;
+    background: linear-gradient(to bottom, transparent, rgba(99, 102, 241, 0.05), transparent);
+    animation: scan 3s linear infinite;
+    pointer-events: none;
+  }
+}
+
+@keyframes scan {
+  from { transform: translateY(-100%); }
+  to { transform: translateY(100%); }
+}
+
+@keyframes glitch {
+  0% { transform: translate(0); }
+  20% { transform: translate(-2px, 2px); }
+  40% { transform: translate(-2px, -2px); }
+  60% { transform: translate(2px, 2px); }
+  80% { transform: translate(2px, -2px); }
+  100% { transform: translate(0); }
+}
+
+.glitch-hover:hover {
+  animation: glitch 0.3s cubic-bezier(.25, .46, .45, .94) both infinite;
+}
+
 /* Custom Cursor Styles */
 .custom-cursor {
   width: 8px;
