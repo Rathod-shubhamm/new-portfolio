@@ -153,10 +153,18 @@ export default function About() {
             </p>
 
             {/* Animated CountUp Stats */}
-            <div className="grid grid-cols-3 gap-8 pt-4">
-              <CounterStat value={5} suffix="+" label="Major Projects" />
-              <CounterStat value={2024} label="Graduation" duration={1200} />
-              <CounterStat value={100} suffix="%" label="Commitment" />
+            <div className="grid grid-cols-3 pt-4 divide-x divide-white/5">
+              <div className="pr-6 space-y-1">
+                <CounterStat value={5} suffix="+" label="Major Projects" />
+              </div>
+              <div className="px-6 space-y-1">
+                {/* Year displayed statically — no count-up needed */}
+                <span className="block text-4xl md:text-5xl font-display font-extrabold text-white">2024</span>
+                <span className="text-[10px] uppercase tracking-widest text-slate-500">Graduation</span>
+              </div>
+              <div className="pl-6 space-y-1">
+                <CounterStat value={100} suffix="%" label="Commitment" />
+              </div>
             </div>
           </motion.div>
 
