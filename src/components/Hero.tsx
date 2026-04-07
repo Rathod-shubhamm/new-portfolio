@@ -36,19 +36,19 @@ export default function Hero() {
   const name = siteConfig.name;
 
   return (
-    <section className="relative h-screen flex items-center justify-center overflow-hidden">
+    <section className="relative h-screen flex items-center justify-center overflow-hidden scanline">
       <VisualSignature />
       <NeuralLog />
-      
+
       {/* Hero Glow */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-accent/10 blur-[120px] rounded-full pointer-events-none" />
 
       <div className="container relative z-10 mx-auto px-6 text-center">
         <motion.div
-           initial={{ opacity: 0, scale: 0.9 }}
-           animate={{ opacity: 1, scale: 1 }}
-           transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] } as any}
-           className="inline-flex items-center gap-2 px-4 py-2 mb-8 rounded-full border border-white/10 bg-white/5 backdrop-blur-md text-[10px] uppercase tracking-[0.2em] font-medium text-slate-300"
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] } as any}
+          className="inline-flex items-center gap-2 px-4 py-2 mb-8 rounded-full border border-white/10 bg-white/5 backdrop-blur-md text-[10px] uppercase tracking-[0.2em] font-medium text-slate-300"
         >
           <span className="relative flex h-2 w-2">
             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-accent opacity-75"></span>
@@ -57,7 +57,7 @@ export default function Hero() {
           AVAILABLE FOR PARTNERSHIPS
         </motion.div>
 
-        <h1 className="text-6xl md:text-[10rem] font-bold font-display tracking-tight leading-[0.9] mb-8 text-white">
+        <h1 className="text-6xl md:text-[10rem] font-bold font-display tracking-tight leading-[0.9] mb-8 text-white glitch-hover">
           {name.split(" ").map((word, wordIndex) => (
             <span key={wordIndex} className="inline-block whitespace-nowrap mr-4 last:mr-0">
               {word.split("").map((char, charIndex) => (
@@ -95,7 +95,7 @@ export default function Hero() {
             >
               View My Work <ArrowRight className="w-4 h-4" />
             </motion.a>
-            
+
             <motion.a
               href="#contact"
               whileHover={{ scale: 1.05 }}

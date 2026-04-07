@@ -6,7 +6,7 @@ import { cn } from "@/lib/utils";
 
 export default function TechStack() {
   return (
-    <section id="skills" className="py-32 bg-[#08080a] relative overflow-hidden">
+    <section id="skills" className="py-32 bg-[#050508] relative overflow-hidden">
       {/* Background radial glow */}
       <div className="absolute top-1/2 right-0 -translate-y-1/2 w-[600px] h-[600px] bg-accent/5 blur-[120px] rounded-full pointer-events-none" />
 
@@ -54,18 +54,42 @@ function SkillCard({ cluster, index }: { cluster: any; index: number }) {
       transition={{ delay: index * 0.1, duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
       whileHover={{ y: -8, boxShadow: "0 0 40px rgba(99,102,241,0.2)" }}
       className={cn(
-        "bento-card group flex flex-col justify-between h-full min-h-[220px] transition-all",
+        "bento-card group flex flex-col justify-between h-full min-h-[260px] transition-all relative overflow-hidden",
         spans[index % spans.length]
       )}
     >
-      <div className="flex justify-between items-start">
+      {/* Background Neural Animation for first card */}
+      {index === 0 && (
+         <div className="absolute top-0 right-0 w-32 h-32 opacity-20 group-hover:opacity-40 transition-opacity">
+            <svg viewBox="0 0 100 100" className="w-full h-full text-accent">
+               <motion.circle 
+                  cx="50" cy="50" r="10" fill="currentColor"
+                  animate={{ r: [10, 15, 10] }}
+                  transition={{ duration: 2, repeat: Infinity }}
+               />
+               {[0, 60, 120, 180, 240, 300].map((angle) => (
+                  <motion.line 
+                     key={angle}
+                     x1="50" y1="50" 
+                     x2={50 + 40 * Math.cos(angle * Math.PI / 180)}
+                     y2={50 + 40 * Math.sin(angle * Math.PI / 180)}
+                     stroke="currentColor" strokeWidth="0.5"
+                     animate={{ opacity: [0.2, 1, 0.2] }}
+                     transition={{ duration: 3, repeat: Infinity, delay: angle / 360 }}
+                  />
+               ))}
+            </svg>
+         </div>
+      )}
+
+      <div className="relative z-10 flex justify-between items-start">
         <div className="w-12 h-12 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-3xl group-hover:scale-110 transition-transform duration-500 shadow-inner shadow-white/5">
           {cluster.icon}
         </div>
         <span className="text-[10px] font-mono text-slate-500 uppercase tracking-widest pt-2">0{index + 1}</span>
       </div>
 
-      <div className="mt-8 space-y-4">
+      <div className="relative z-10 mt-8 space-y-4">
         <h3 className="text-2xl font-bold font-display uppercase tracking-wider text-white group-hover:text-accent transition-colors">
           {cluster.title}
         </h3>
@@ -92,11 +116,13 @@ function SkillCard({ cluster, index }: { cluster: any; index: number }) {
                  <motion.div 
                     initial={{ width: 0 }}
                     whileInView={{ width: "98%" }}
-                    className="h-full bg-accent/40"
+                    className="h-full bg-accent"
                  />
               </div>
               <p className="text-[8px] text-slate-600 uppercase tracking-[0.2em] leading-relaxed">
-                 Expertise in transformer-based architectures, RAG optimization, and autonomous agent orchestration.
+                 {index === 0 
+                  ? "Expertise in Transformer-based architectures, RAG optimization, and autonomous agent orchestration." 
+                  : "High-performance infrastructure design with low-latency inference and scalable vector retrieval."}
               </p>
            </div>
         </div>

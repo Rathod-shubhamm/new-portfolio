@@ -4,7 +4,7 @@ import { useRef, useMemo } from "react"
 import { Canvas, useFrame } from "@react-three/fiber"
 import * as THREE from "three"
 
-function NeuralNetwork({ count = 80, connectionDistance = 2.5 }) {
+function NeuralNetwork({ count = 120, connectionDistance = 2.8 }) {
   const pointsRef = useRef<THREE.Points>(null!)
   const linesRef = useRef<THREE.LineSegments>(null!)
 
@@ -13,19 +13,21 @@ function NeuralNetwork({ count = 80, connectionDistance = 2.5 }) {
     const velocities = new Float32Array(count * 3)
     
     for (let i = 0; i < count; i++) {
-      positions[i * 3] = (Math.random() - 0.5) * 10
-      positions[i * 3 + 1] = (Math.random() - 0.5) * 10
-      positions[i * 3 + 2] = (Math.random() - 0.5) * 10
+      positions[i * 3] = (Math.random() - 0.5) * 12
+      positions[i * 3 + 1] = (Math.random() - 0.5) * 12
+      positions[i * 3 + 2] = (Math.random() - 0.5) * 12
       
-      velocities[i * 3] = (Math.random() - 0.5) * 0.01
-      velocities[i * 3 + 1] = (Math.random() - 0.5) * 0.01
-      velocities[i * 3 + 2] = (Math.random() - 0.5) * 0.01
+      velocities[i * 3] = (Math.random() - 0.5) * 0.015
+      velocities[i * 3 + 1] = (Math.random() - 0.5) * 0.015
+      velocities[i * 3 + 2] = (Math.random() - 0.5) * 0.015
     }
     
     return { positions, velocities }
   }, [count])
 
   useFrame((state) => {
+    if (!pointsRef.current || !linesRef.current) return
+    
     const { positions, velocities } = particles
     const linePositions = []
     
@@ -36,28 +38,28 @@ function NeuralNetwork({ count = 80, connectionDistance = 2.5 }) {
       positions[i * 3 + 2] += velocities[i * 3 + 2]
 
       // Bounce off boundaries
-      if (Math.abs(positions[i * 3]) > 5) velocities[i * 3] *= -1
-      if (Math.abs(positions[i * 3 + 1]) > 5) velocities[i * 3 + 1] *= -1
-      if (Math.abs(positions[i * 3 + 2]) > 5) velocities[i * 3 + 2] *= -1
+      if (Math.abs(positions[i * 3]) > 6) velocities[i * 3] *= -1
+      if (Math.abs(positions[i * 3 + 1]) > 6) velocities[i * 3 + 1] *= -1
+      if (Math.abs(positions[i * 3 + 2]) > 6) velocities[i * 3 + 2] *= -1
 
       // Mouse interaction
-      const mouseX = state.mouse.x * 5
-      const mouseY = state.mouse.y * 5
+      const mouseX = state.mouse.x * 6
+      const mouseY = state.mouse.y * 6
       const dx = mouseX - positions[i * 3]
       const dy = mouseY - positions[i * 3 + 1]
       const dist = Math.sqrt(dx * dx + dy * dy)
       
-      if (dist < 2) {
-        positions[i * 3] -= dx * 0.005
-        positions[i * 3 + 1] -= dy * 0.005
+      if (dist < 2.5) {
+        positions[i * 3] -= dx * 0.008
+        positions[i * 3 + 1] -= dy * 0.008
       }
 
       // Find connections
       for (let j = i + 1; j < count; j++) {
-        const dx = positions[i * 3] - positions[j * 3]
-        const dy = positions[i * 3 + 1] - positions[j * 3 + 1]
-        const dz = positions[i * 3 + 2] - positions[j * 3 + 2]
-        const distSq = dx * dx + dy * dy + dz * dz
+        const dx_line = positions[i * 3] - positions[j * 3]
+        const dy_line = positions[i * 3 + 1] - positions[j * 3 + 1]
+        const dz_line = positions[i * 3 + 2] - positions[j * 3 + 2]
+        const distSq = dx_line * dx_line + dy_line * dy_line + dz_line * dz_line
         
         if (distSq < connectionDistance * connectionDistance) {
           linePositions.push(positions[i * 3], positions[i * 3 + 1], positions[i * 3 + 2])
@@ -68,12 +70,11 @@ function NeuralNetwork({ count = 80, connectionDistance = 2.5 }) {
 
     pointsRef.current.geometry.attributes.position.needsUpdate = true
     
-    if (linesRef.current) {
-      linesRef.current.geometry.setAttribute(
-        'position',
-        new THREE.Float32BufferAttribute(linePositions, 3)
-      )
-    }
+    // Explicitly update line segments attribute
+    linesRef.current.geometry.setAttribute(
+      'position',
+      new THREE.Float32BufferAttribute(linePositions, 3)
+    )
   })
 
   return (
@@ -85,19 +86,22 @@ function NeuralNetwork({ count = 80, connectionDistance = 2.5 }) {
             count={particles.positions.length / 3}
             array={particles.positions}
             itemSize={3}
+            // @ts-ignore
+            args={[particles.positions, 3]}
           />
         </bufferGeometry>
         <pointsMaterial
-          size={0.08}
+          size={0.12}
           color="#6366f1"
           transparent
-          opacity={0.6}
+          opacity={0.8}
           sizeAttenuation
+          blending={THREE.AdditiveBlending}
         />
       </points>
       <lineSegments ref={linesRef}>
         <bufferGeometry />
-        <lineBasicMaterial color="#6366f1" transparent opacity={0.15} linewidth={1} />
+        <lineBasicMaterial color="#6366f1" transparent opacity={0.4} linewidth={1} blending={THREE.AdditiveBlending} />
       </lineSegments>
     </>
   )
@@ -105,7 +109,7 @@ function NeuralNetwork({ count = 80, connectionDistance = 2.5 }) {
 
 export default function VisualSignature() {
   return (
-    <div className="absolute inset-0 -z-10 pointer-events-none opacity-50">
+    <div className="absolute inset-0 -z-10 pointer-events-none opacity-60">
       <Canvas camera={{ position: [0, 0, 8], fov: 60 }}>
         <NeuralNetwork />
       </Canvas>
