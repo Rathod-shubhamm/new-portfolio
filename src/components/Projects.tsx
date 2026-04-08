@@ -78,117 +78,147 @@ export default function Projects() {
 
 function ProjectCard({ project, index }: { project: any; index: number }) {
   const isLarge = index % 3 === 0;
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const [isHovered, setIsHovered] = useState(false);
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    setMousePosition({
+      x: e.clientX - rect.left,
+      y: e.clientY - rect.top,
+    });
+  };
 
   return (
     <motion.div
       layout
-      initial={{ opacity: 0, scale: 0.95 }}
-      animate={{ opacity: 1, scale: 1 }}
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, scale: 0.95 }}
-      whileHover={{ y: -10 }}
-      transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+      whileHover={{ y: -12 }}
+      transition={{ 
+        duration: 0.8, 
+        ease: [0.22, 1, 0.36, 1],
+        layout: { duration: 0.5 }
+      }}
+      onMouseMove={handleMouseMove}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
       className={cn(
-        "group relative overflow-hidden rounded-[3rem] cursor-pointer card-glow-border",
-        isLarge ? "md:h-[600px]" : "md:h-[500px]"
+        "group relative overflow-hidden rounded-[2.5rem] cursor-pointer",
+        isLarge ? "md:h-[650px]" : "md:h-[550px]"
       )}
     >
-      <div className="relative h-full w-full overflow-hidden rounded-[3rem] glass border-white/5 bg-white/[0.02]">
+      {/* Spotlight Effect */}
+      <div
+        className="absolute inset-0 pointer-events-none z-10 transition-opacity duration-500"
+        style={{
+          opacity: isHovered ? 1 : 0,
+          background: `radial-gradient(600px circle at ${mousePosition.x}px ${mousePosition.y}px, rgba(99, 102, 241, 0.1), transparent 40%)`,
+        }}
+      />
+
+      <div className="relative h-full w-full overflow-hidden rounded-[2.5rem] glass border-white/5 bg-slate-900/40 backdrop-blur-3xl">
         <Image
           src={project.image}
           alt={project.title}
           fill
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-          className="object-cover opacity-50 group-hover:scale-105 group-hover:opacity-70 transition-all duration-1000 ease-[cubic-bezier(0.22,1,0.36,1)]"
+          className="object-cover opacity-40 group-hover:scale-110 group-hover:opacity-60 transition-all duration-[1.5s] ease-[cubic-bezier(0.22,1,0.36,1)]"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-background via-background/40 to-transparent" />
+        
+        {/* Complex Gradient Overlays */}
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-background/20 to-background/90" />
+        <div className="absolute inset-0 bg-gradient-to-r from-background/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
 
         {/* Project Content */}
-        <div className="absolute bottom-0 left-0 right-0 p-10 space-y-5">
-          <div className="space-y-2">
-            <span className="text-[10px] uppercase tracking-[0.3em] font-bold text-accent">
-              {project.category}
-            </span>
-            <h3 className="text-3xl md:text-5xl font-bold font-display uppercase tracking-tighter text-white">
+        <div className="absolute inset-0 p-8 md:p-12 flex flex-col justify-end space-y-6 z-20">
+          <div className="space-y-3">
+            <div className="flex items-center gap-3">
+              <span className="text-[10px] uppercase tracking-[0.4em] font-black text-accent drop-shadow-[0_0_10px_rgba(99,102,241,0.5)]">
+                {project.category}
+              </span>
+              <div className="h-px w-8 bg-white/20" />
+            </div>
+            
+            <h3 className="text-4xl md:text-6xl font-bold font-display leading-[0.9] tracking-tighter text-white group-hover:text-gradient transition-all duration-500">
               {project.title}
             </h3>
           </div>
 
-          <p className="text-slate-400 text-sm leading-relaxed max-w-sm line-clamp-2 group-hover:line-clamp-none transition-all duration-500">
+          <p className="text-slate-400 text-base leading-relaxed max-w-sm line-clamp-2 group-hover:line-clamp-none transition-all duration-700 ease-in-out">
             {project.description}
           </p>
 
-          {/* Tech tag pills */}
-          <div className="flex flex-wrap gap-2">
-            {project.tags?.map((tag: string) => (
+          {/* Tech stack & metrics */}
+          <div className="flex flex-wrap gap-3">
+            {project.tags?.slice(0, 4).map((tag: string) => (
               <span
                 key={tag}
-                className="px-3 py-1 rounded-full text-[9px] font-mono uppercase tracking-wider bg-white/5 border border-white/10 text-slate-400"
+                className="px-4 py-1.5 rounded-full text-[10px] font-mono font-bold uppercase tracking-widest bg-white/5 border border-white/10 text-slate-300 backdrop-blur-xl group-hover:border-accent/30 transition-colors"
               >
                 {tag}
               </span>
             ))}
           </div>
 
-          {/* Metrics */}
-          <div className="flex flex-wrap gap-2">
-            {project.metrics.map((metric: string) => (
-              <div
-                key={metric}
-                className="px-4 py-2 rounded-full bg-white/5 backdrop-blur-md border border-white/10 flex items-center gap-2"
-              >
-                <div className="w-1 h-1 rounded-full bg-accent animate-pulse" />
-                <span className="text-[9px] uppercase tracking-widest font-bold text-white">
-                  {metric}
+          {/* Divider and Technical Specs */}
+          <div className="space-y-4 pt-2">
+            <div className="h-px bg-white/10 w-full group-hover:bg-accent/20 transition-colors" />
+            
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
+              <div className="space-y-1">
+                <span className="block text-[9px] uppercase tracking-[0.2em] text-slate-500 font-black">
+                  Core Architecture
                 </span>
-              </div>
-            ))}
-          </div>
-
-          {/* Per-project technical specs — revealed on hover */}
-          <div className="h-0 group-hover:h-auto opacity-0 group-hover:opacity-100 transition-all duration-700 overflow-hidden space-y-3 pt-2">
-            <div className="h-px bg-white/5 w-full" />
-            <div className="grid grid-cols-3 gap-3">
-              <div>
-                <span className="block text-[8px] uppercase tracking-widest text-slate-500 font-bold mb-1">
-                  Architecture
-                </span>
-                <span className="text-[10px] text-white font-mono">
+                <span className="text-xs text-white font-medium">
                   {project.architecture}
                 </span>
               </div>
-              <div>
-                <span className="block text-[8px] uppercase tracking-widest text-slate-500 font-bold mb-1">
-                  Stack
+              <div className="hidden md:block space-y-1">
+                <span className="block text-[9px] uppercase tracking-[0.2em] text-slate-500 font-black">
+                  Latency Peak
                 </span>
-                <span className="text-[10px] text-white font-mono">
-                  {project.stack}
+                <span className="text-xs text-accent font-bold">
+                  {project.latency}
                 </span>
               </div>
-              <div>
-                <span className="block text-[8px] uppercase tracking-widest text-slate-500 font-bold mb-1">
-                  Latency
+              <div className="space-y-1">
+                <span className="block text-[9px] uppercase tracking-[0.2em] text-slate-500 font-black">
+                  Key Metric
                 </span>
-                <span className="text-[10px] text-accent font-mono font-bold">
-                  {project.latency}
+                <span className="text-xs text-white font-medium">
+                  {project.metrics[0]}
                 </span>
               </div>
             </div>
           </div>
 
-          <div className="flex items-center gap-6 pt-2">
+          {/* Action Buttons */}
+          <div className="flex items-center gap-8 pt-4">
             <a
               href={project.live}
-              className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-white hover:text-accent transition-colors"
+              className="flex items-center gap-3 text-[11px] font-black uppercase tracking-[0.2em] text-white hover:text-accent transition-all duration-300"
             >
-              <RiExternalLinkLine className="w-4 h-4" /> Live Demo
+              <span className="relative">
+                Live Preview
+                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-accent group-hover:w-full transition-all duration-500" />
+              </span>
+              <RiExternalLinkLine className="w-4 h-4" />
             </a>
             <a
               href={project.github}
-              className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-slate-500 hover:text-white transition-colors"
+              className="flex items-center gap-3 text-[11px] font-black uppercase tracking-[0.2em] text-slate-500 hover:text-white transition-all duration-300"
             >
-              <RiGithubFill className="w-4 h-4" /> Source
+              Source Code
+              <RiGithubFill className="w-5 h-5" />
             </a>
           </div>
+        </div>
+
+        {/* Decorative corner element */}
+        <div className="absolute top-0 right-0 p-8 opacity-20 group-hover:opacity-100 transition-opacity duration-500">
+           <div className="w-12 h-12 border-t-2 border-r-2 border-white/20 rounded-tr-2xl" />
         </div>
       </div>
     </motion.div>

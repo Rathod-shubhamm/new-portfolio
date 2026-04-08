@@ -157,7 +157,7 @@ export default function Hero() {
             {[
               { value: "5+", label: "Projects" },
               { value: "3+", label: "LLM Stacks" },
-              { value: "2024", label: "Graduate" },
+              { value: "2026", label: "Graduate" },
             ].map((stat) => (
               <div key={stat.label} className="space-y-1">
                 <span className="block text-2xl font-bold font-display text-white">{stat.value}</span>
