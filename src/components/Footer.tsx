@@ -3,7 +3,69 @@
 import { motion } from "framer-motion";
 import { RiGithubFill, RiLinkedinBoxFill, RiMailFill } from "react-icons/ri";
 import { siteConfig } from "@/lib/data";
-import { useState, useRef } from "react";
+import { useState, useRef, useMemo } from "react";
+import { Canvas, useFrame } from "@react-three/fiber";
+import * as THREE from "three";
+
+/* ─── Warp Grid ────────────────────────────────────────────────────────── */
+function WarpGrid() {
+  const gridRef = useRef<THREE.LineSegments>(null!);
+
+  const geometry = useMemo(() => {
+    const lines: number[] = [];
+    const SIZE    = 24;
+    const STEPS   = 20;
+    const SPACING = SIZE / STEPS;
+
+    // Horizontal lines
+    for (let i = 0; i <= STEPS; i++) {
+      const x = -SIZE / 2 + i * SPACING;
+      lines.push(x, 0, 0,  x, 0, -SIZE);
+    }
+    // Vertical lines
+    for (let j = 0; j <= STEPS; j++) {
+      const z = -j * SPACING;
+      lines.push(-SIZE / 2, 0, z,  SIZE / 2, 0, z);
+    }
+
+    const geo = new THREE.BufferGeometry();
+    geo.setAttribute("position", new THREE.Float32BufferAttribute(lines, 3));
+    return geo;
+  }, []);
+
+  useFrame((state) => {
+    if (!gridRef.current) return;
+    // Scroll the grid lines along z-axis for warp effect
+    const t = state.clock.elapsedTime * 0.4;
+    gridRef.current.position.z = (t % (24 / 20));
+  });
+
+  return (
+    <lineSegments ref={gridRef} geometry={geometry} rotation={[-Math.PI * 0.38, 0, 0]} position={[0, -1.8, 2]}>
+      <lineBasicMaterial
+        color="#6366f1"
+        transparent
+        opacity={0.12}
+        blending={THREE.AdditiveBlending}
+        depthWrite={false}
+      />
+    </lineSegments>
+  );
+}
+
+function FooterCanvas() {
+  return (
+    <div className="absolute inset-0 pointer-events-none overflow-hidden">
+      <Canvas
+        camera={{ position: [0, 2, 6], fov: 65 }}
+        gl={{ antialias: false, alpha: true }}
+        dpr={[1, 1]}
+      >
+        <WarpGrid />
+      </Canvas>
+    </div>
+  );
+}
 
 export default function Footer() {
   const [formData, setFormData] = useState({ name: "", email: "", message: "" });
@@ -25,6 +87,8 @@ export default function Footer() {
 
   return (
     <footer id="contact" className="py-32 bg-background relative overflow-hidden">
+      {/* 3D Warp Grid background */}
+      <FooterCanvas />
       {/* Background radial glow */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] bg-accent/5 blur-[140px] rounded-full pointer-events-none" />
 

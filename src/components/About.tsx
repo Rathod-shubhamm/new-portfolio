@@ -2,9 +2,13 @@
 
 import { motion, useInView } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
+import dynamic from "next/dynamic";
 import { siteConfig } from "@/lib/data";
 
-// Animated CountUp hook
+// Dynamically import TechOrb (SSR off — Three.js needs browser)
+const TechOrb = dynamic(() => import("./TechOrb"), { ssr: false });
+
+/* ─── Animated CountUp hook ─────────────────────────────────────────────── */
 function useCountUp(target: number, duration = 2000) {
   const [count, setCount] = useState(0);
   const [started, setStarted] = useState(false);
@@ -15,7 +19,6 @@ function useCountUp(target: number, duration = 2000) {
     const step = (now: number) => {
       const elapsed = now - startTime;
       const progress = Math.min(elapsed / duration, 1);
-      // Ease out cubic
       const eased = 1 - Math.pow(1 - progress, 3);
       setCount(Math.floor(eased * target));
       if (progress < 1) requestAnimationFrame(step);
@@ -46,80 +49,28 @@ function CounterStat({ value, suffix = "", label }: { value: number; suffix?: st
   );
 }
 
-// Terminal-style identity card
-function IdentityCard() {
-  const [isMounted, setIsMounted] = useState(false);
-  useEffect(() => setIsMounted(true), []);
+/* ─── Identity badges below the orb ─────────────────────────────────────── */
+const IDENTITY_BADGES = [
+  { label: "Python",  color: "from-indigo-500/20 to-indigo-500/5",  border: "border-indigo-500/30" },
+  { label: "LLMs",    color: "from-cyan-500/20   to-cyan-500/5",    border: "border-cyan-500/30"   },
+  { label: "RAG",     color: "from-violet-500/20 to-violet-500/5",  border: "border-violet-500/30" },
+  { label: "FastAPI", color: "from-teal-500/20   to-teal-500/5",    border: "border-teal-500/30"   },
+  { label: "Next.js", color: "from-blue-500/20   to-blue-500/5",    border: "border-blue-500/30"   },
+  { label: "Docker",  color: "from-purple-500/20 to-purple-500/5",  border: "border-purple-500/30" },
+];
 
-  const lines = [
-    { label: "name", value: "Shubham Rathod", color: "text-accent" },
-    { label: "role", value: "AI Engineer", color: "text-emerald-400" },
-    { label: "focus", value: "LLMs · RAG · Agents", color: "text-yellow-400" },
-    { label: "status", value: "AVAILABLE", color: "text-green-400" },
-    { label: "location", value: "India (IST UTC+5:30)", color: "text-slate-300" },
-    { label: "stack", value: "Python · Next.js · FastAPI", color: "text-blue-400" },
-  ];
-
-  return (
-    <div className="aspect-square rounded-[40px] glass border-white/10 overflow-hidden p-1">
-      <div className="w-full h-full rounded-[38px] bg-gradient-to-br from-white/5 to-transparent flex flex-col p-8 space-y-0 relative overflow-hidden group">
-        {/* Terminal top bar */}
-        <div className="flex items-center gap-2 mb-6 pb-4 border-b border-white/5">
-          <div className="w-3 h-3 rounded-full bg-red-500/70" />
-          <div className="w-3 h-3 rounded-full bg-yellow-500/70" />
-          <div className="w-3 h-3 rounded-full bg-green-500/70" />
-          <span className="ml-3 text-[10px] font-mono text-slate-600 uppercase tracking-widest">
-            ~/identity.json
-          </span>
-        </div>
-
-        {/* JSON body */}
-        <div className="font-mono text-[11px] leading-7 space-y-0 flex-1 overflow-hidden">
-          <p className="text-slate-500">{"{"}</p>
-          {isMounted && lines.map((line, i) => (
-            <motion.p
-              key={line.label}
-              initial={{ opacity: 0, x: -10 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.3 + i * 0.1, duration: 0.4 }}
-              className="pl-4"
-            >
-              <span className="text-slate-500">&quot;{line.label}&quot;</span>
-              <span className="text-slate-600">: </span>
-              <span className={line.color}>&quot;{line.value}&quot;</span>
-              {i < lines.length - 1 && <span className="text-slate-600">,</span>}
-            </motion.p>
-          ))}
-          <p className="text-slate-500">{"}"}</p>
-        </div>
-
-        {/* Pulsing availability badge */}
-        <div className="mt-6 pt-4 border-t border-white/5 flex items-center gap-3">
-          <span className="relative flex h-2 w-2">
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75" />
-            <span className="relative inline-flex rounded-full h-2 w-2 bg-green-400" />
-          </span>
-          <span className="text-[9px] font-mono uppercase tracking-[0.3em] text-slate-500">
-            Open to opportunities
-          </span>
-        </div>
-
-        {/* Background glow */}
-        <div className="absolute -bottom-10 -right-10 w-32 h-32 bg-accent/10 blur-[40px] rounded-full pointer-events-none group-hover:bg-accent/20 transition-colors duration-700" />
-      </div>
-    </div>
-  );
-}
-
+/* ─── Main Section ───────────────────────────────────────────────────────── */
 export default function About() {
   return (
     <section id="about" className="py-32 bg-background relative overflow-hidden">
       {/* Background radial glow */}
       <div className="absolute top-1/2 left-0 -translate-y-1/2 w-[500px] h-[500px] bg-accent/5 blur-[100px] rounded-full pointer-events-none" />
+      <div className="absolute top-1/4 right-0 w-[400px] h-[400px] bg-cyan-500/5 blur-[120px] rounded-full pointer-events-none" />
 
       <div className="container mx-auto px-6 relative z-10">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-20 items-center">
-          {/* Left: Bio */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-16 md:gap-24 items-center">
+
+          {/* ── Left: Bio ──────────────────────────────────────────────── */}
           <motion.div
             initial={{ opacity: 0, x: -60 }}
             whileInView={{ opacity: 1, x: 0 }}
@@ -158,7 +109,6 @@ export default function About() {
                 <CounterStat value={5} suffix="+" label="Major Projects" />
               </div>
               <div className="px-6 space-y-1">
-                {/* Year displayed statically — no count-up needed */}
                 <span className="block text-4xl md:text-5xl font-display font-extrabold text-white">2024</span>
                 <span className="text-[10px] uppercase tracking-widest text-slate-500">Graduation</span>
               </div>
@@ -168,15 +118,65 @@ export default function About() {
             </div>
           </motion.div>
 
-          {/* Right: Terminal Identity Card */}
+          {/* ── Right: 3D TechOrb ──────────────────────────────────────────── */}
           <motion.div
             initial={{ opacity: 0, x: 60, scale: 0.95 }}
             whileInView={{ opacity: 1, x: 0, scale: 1 }}
             viewport={{ once: true, margin: "-100px" }}
             transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
-            className="relative"
+            className="relative flex flex-col items-center gap-8"
           >
-            <IdentityCard />
+            {/* Label */}
+            <div className="self-start flex items-center gap-3">
+              <span className="text-[10px] uppercase tracking-[0.4em] font-medium text-accent">
+                Tech Orbit
+              </span>
+              <div className="h-px w-12 bg-accent/30" />
+              <span className="text-[10px] uppercase tracking-wider text-slate-600 font-mono">
+                drag to rotate
+              </span>
+            </div>
+
+            {/* Orb canvas */}
+            <div className="relative w-full rounded-[40px] overflow-hidden glass border-white/8 shadow-[0_0_80px_rgba(99,102,241,0.12)]">
+              <TechOrb />
+              {/* Subtle inner glow overlay */}
+              <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-[#050508]/60 pointer-events-none rounded-[40px]" />
+            </div>
+
+            {/* Identity badges */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.4, duration: 0.8 }}
+              className="flex flex-wrap gap-2 justify-center"
+            >
+              {IDENTITY_BADGES.map((badge, i) => (
+                <motion.span
+                  key={badge.label}
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  whileInView={{ opacity: 1, scale: 1 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: 0.5 + i * 0.07, duration: 0.5 }}
+                  whileHover={{ scale: 1.08, y: -2 }}
+                  className={`px-4 py-1.5 rounded-full text-[10px] font-mono font-bold uppercase tracking-widest bg-gradient-to-r ${badge.color} border ${badge.border} text-slate-300 backdrop-blur-sm transition-shadow duration-300 hover:shadow-[0_0_16px_rgba(99,102,241,0.2)]`}
+                >
+                  {badge.label}
+                </motion.span>
+              ))}
+            </motion.div>
+
+            {/* Availability badge */}
+            <div className="flex items-center gap-3">
+              <span className="relative flex h-2 w-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75" />
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-green-400" />
+              </span>
+              <span className="text-[9px] font-mono uppercase tracking-[0.3em] text-slate-500">
+                Open to opportunities
+              </span>
+            </div>
 
             {/* Decorative element */}
             <div className="absolute -bottom-10 -right-10 w-40 h-40 bg-accent/10 blur-[60px] rounded-full pointer-events-none" />

@@ -124,6 +124,17 @@ export const experience = [
     achievements: ["Optimized retrieval accuracy by 25%", "Built autonomous agents using LangChain"],
   },
   {
+    company: "BlinkCare",
+    role: "Technical Advisor & Consultant",
+    period: "Late 2025 - Present",
+    description: "Served as an independent technical consultant for BlinkCare (blinkcare.co.in), a healthcare-focused startup. Advised on tech stack selection, system architecture, and business strategy to help lay the foundation for a scalable product.",
+    achievements: [
+      "Guided tech stack selection & architecture decisions",
+      "Advised on product strategy and go-to-market approach",
+      "Supported early-stage platform setup and infrastructure planning",
+    ],
+  },
+  {
     company: "University of Technology",
     role: "Computer Science Graduate",
     period: "2021 - 2026",

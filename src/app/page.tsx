@@ -1,5 +1,6 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
 import About from "@/components/About";
@@ -11,9 +12,13 @@ import ParallaxText from "@/components/ParallaxText";
 import Footer from "@/components/Footer";
 import { motion } from "framer-motion";
 
+const ThreeBackground = dynamic(() => import("@/components/ThreeBackground"), { ssr: false });
+
 export default function Home() {
   return (
     <main className="relative min-h-screen bg-background text-foreground">
+      {/* Global ambient 3D background */}
+      <ThreeBackground />
       <Navbar />
       
       <div id="hero">
