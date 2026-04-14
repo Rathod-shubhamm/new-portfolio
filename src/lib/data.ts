@@ -117,16 +117,29 @@ export const skillClusters = [
 
 export const experience = [
   {
-    company: "Future AI Solutions",
-    role: "AI Engineer Intern",
-    period: "2023 - Present",
-    description: "Developing intelligent agents and implementing RAG pipelines for enterprise clients.",
-    achievements: ["Optimized retrieval accuracy by 25%", "Built autonomous agents using LangChain"],
+    company: "Apexneural Pvt Ltd",
+    role: "AI Context Engineer",
+    period: "Aug 2025 – Present",
+    description: "Building intelligent automation systems, LLM pipelines, and full-stack AI products. Working across multi-agent orchestration, computer vision, data engineering, and scalable ML infrastructure.",
+    achievements: [
+      "Built a multi-platform social media automation system using GPT-4 & Stable Diffusion — publishing 10,000+ posts/month across Instagram, Twitter & LinkedIn for 100+ accounts with 99.2% uptime",
+      "Architected 12 reusable prompt templates with output validation, improving generation speed by 25% and cutting monthly API costs by $500",
+      "Constructed a resilient Reddit data ingestion pipeline (Python, BeautifulSoup, lxml) with adaptive selectors and fallback handling — maintaining 92% retrieval success rate",
+      "Delivered a document automation platform (Next.js + FastAPI + GPT-4 Vision + Google Workspace APIs) processing 500+ documents weekly with OAuth 2.0 authentication",
+      "Optimized analytics across 2TB+ of scraped data using FastAPI, PostgreSQL, and Redis caching — reducing average query latency from 12s to 3s",
+      "Designed fault-tolerant async pipelines with task queues and recovery mechanisms, ensuring 99.7% data integrity across concurrent scraping workflows",
+      "Built real-time sports analytics system using PyTorch, YOLOv8 & OpenCV for multi-object tracking and action recognition at 30 FPS, sub-100ms latency",
+      "Applied semantic segmentation for player ID and boundary detection, reaching 89% mAP on a custom dataset of 10,000+ annotated frames",
+      "Containerized microservices with Docker, reducing environment setup from 4 hours to 15 minutes across a 12-member team",
+      "Established CI/CD workflows via GitHub Actions, compressing release cycles from 3 days to 4 hours",
+      "Implemented a multi-agent company automation system (5 functional agents + CEO agent) integrating Jira and Slack to convert voice inputs into structured, trackable tasks",
+      "Engineered a hybrid column-level data lineage system for Snowflake and BigQuery using sqlglot with LLM-based fallback for complex queries — enabling accurate source-to-target mapping at scale",
+    ],
   },
   {
     company: "BlinkCare",
     role: "Technical Advisor & Consultant",
-    period: "Late 2025 - Present",
+    period: "Late 2025 – Present",
     description: "Served as an independent technical consultant for BlinkCare (blinkcare.co.in), a healthcare-focused startup. Advised on tech stack selection, system architecture, and business strategy to help lay the foundation for a scalable product.",
     achievements: [
       "Guided tech stack selection & architecture decisions",
@@ -135,10 +148,10 @@ export const experience = [
     ],
   },
   {
-    company: "University of Technology",
+    company: "Vellore Institute of Technology",
     role: "Computer Science Graduate",
-    period: "2021 - 2026",
-    description: "Focused on AI/ML research and software engineering principles.",
-    achievements: ["Class representative", "Developed 5+ major projects"],
+    period: "2021 – 2026",
+    description: "Integrated MTech in Artificial Intelligence at VIT Bhopal. Focused on AI/ML research and software engineering principles.",
+    achievements: ["Class representative", "Developed 5+ major AI/ML projects", "CGPA: 7.79"],
   },
 ];
