@@ -1,6 +1,3 @@
-"use client";
-
-import dynamic from "next/dynamic";
 import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
 import About from "@/components/About";
@@ -10,59 +7,50 @@ import ProcessFlow from "@/components/ProcessFlow";
 import Timeline from "@/components/Timeline";
 import ParallaxText from "@/components/ParallaxText";
 import Footer from "@/components/Footer";
-import { motion } from "framer-motion";
-
-const ThreeBackground = dynamic(() => import("@/components/ThreeBackground"), { ssr: false });
+import ThreeBackground from "@/components/ThreeBackground";
 
 export default function Home() {
   return (
     <main className="relative min-h-screen bg-background text-foreground">
-      {/* Global ambient 3D background */}
+      {/* Global ambient 3D background — lazy loaded */}
       <ThreeBackground />
       <Navbar />
-      
+
       <div id="hero">
         <Hero />
       </div>
 
-      <motion.div
-        initial={{ opacity: 0 }}
-        whileInView={{ opacity: 1 }}
-        viewport={{ once: true }}
-        transition={{ duration: 1.5 }}
-      >
-        <div id="about">
-          <About />
-        </div>
-        
-        <div id="skills">
-          <TechStack />
-        </div>
+      <div id="about">
+        <About />
+      </div>
 
-        <ParallaxText baseVelocity={-2} className="text-[12vw] opacity-5 text-white/10 pointer-events-none my-12">
-          INTELLIGENCE • AUTONOMY • REASONING
-        </ParallaxText>
+      <div id="skills">
+        <TechStack />
+      </div>
 
-        <div id="projects">
-          <Projects />
-        </div>
+      <ParallaxText baseVelocity={-2} className="text-[12vw] opacity-5 text-white/10 pointer-events-none my-12">
+        INTELLIGENCE • AUTONOMY • REASONING
+      </ParallaxText>
 
-        <ParallaxText baseVelocity={2} className="text-[12vw] opacity-5 text-white/10 pointer-events-none my-12">
-          INFERENCE • DEPLOYMENT • OPTIMIZATION
-        </ParallaxText>
+      <div id="projects">
+        <Projects />
+      </div>
 
-        <div id="process">
-          <ProcessFlow />
-        </div>
-        
-        <div id="experience">
-          <Timeline />
-        </div>
-        
-        <div id="contact">
-          <Footer />
-        </div>
-      </motion.div>
+      <ParallaxText baseVelocity={2} className="text-[12vw] opacity-5 text-white/10 pointer-events-none my-12">
+        INFERENCE • DEPLOYMENT • OPTIMIZATION
+      </ParallaxText>
+
+      <div id="process">
+        <ProcessFlow />
+      </div>
+
+      <div id="experience">
+        <Timeline />
+      </div>
+
+      <div id="contact">
+        <Footer />
+      </div>
     </main>
   );
 }

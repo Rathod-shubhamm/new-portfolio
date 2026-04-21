@@ -62,7 +62,7 @@ export const projects = [
   },
   {
     id: "encrypted-file-sharing",
-    title: "OmniSafe P2P",
+    title: "Encrypted File sharing",
     category: "Security",
     description: "Enterprise-grade decentralized file sharing protocol featuring end-to-end AES-256-GCM encryption and ephemeral metadata handling.",
     metrics: ["AES-256-GCM Secure", "Zero-Knowledge Architecture"],
