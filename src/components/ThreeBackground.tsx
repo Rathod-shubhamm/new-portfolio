@@ -36,12 +36,15 @@ function CrystalShape({
       {shape === "tetrahedron" && <tetrahedronGeometry args={[1]} />}
       <meshPhysicalMaterial
         color={color}
-        roughness={0.05}
+        roughness={0.15}
         metalness={0.1}
-        transmission={0.88}
-        thickness={2.5}
-        iridescence={1}
-        iridescenceIOR={1.5}
+        transmission={0.95}    // Strong glass refraction
+        thickness={3.0}        // Deep volume
+        ior={2.4}              // Diamond Index of Refraction
+        clearcoat={1}          // Extra shiny outer layer
+        clearcoatRoughness={0.1}
+        flatShading={true}     // CRITICAL: Gives the faceted, cut-diamond look
+        envMapIntensity={2.5}  // Stronger environment reflections
         side={THREE.DoubleSide}
         transparent
         opacity={0.9}
