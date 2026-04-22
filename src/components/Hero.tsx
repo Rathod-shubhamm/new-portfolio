@@ -16,9 +16,9 @@ const ROLES = [
 ];
 
 const STATS = [
-  { value: "5+",   label: "Projects",   Icon: Network        },
-  { value: "3+",   label: "LLM Stacks", Icon: Database       },
-  { value: "2026", label: "Graduate",   Icon: GraduationCap  },
+  { value: "5+", label: "Projects", Icon: Network },
+  { value: "3+", label: "LLM Stacks", Icon: Database },
+  { value: "2026", label: "Graduate", Icon: GraduationCap },
 ];
 
 const letterVariants = {
@@ -33,7 +33,7 @@ const letterVariants = {
 function TypewriterRole() {
   const [roleIndex, setRoleIndex] = useState(0);
   const [displayed, setDisplayed] = useState("");
-  const [deleting, setDeleting]   = useState(false);
+  const [deleting, setDeleting] = useState(false);
   const [charIndex, setCharIndex] = useState(0);
 
   useEffect(() => {
@@ -94,7 +94,7 @@ export default function Hero() {
 
           {/* Line 1 — "Shubham" in pure white with 3D/bevel effect */}
           <div className="block overflow-hidden" style={{ paddingBottom: '0.1em' }}>
-            <span 
+            <span
               className="inline-block text-white"
               style={{
                 textShadow: "0px 4px 15px rgba(0,0,0,0.5), inset 0px -2px 4px rgba(0,0,0,0.3)"

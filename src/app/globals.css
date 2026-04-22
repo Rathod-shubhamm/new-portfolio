@@ -4,10 +4,10 @@
   --font-display: var(--font-display);
   --font-body: var(--font-body);
   --font-mono: var(--font-mono);
-  
+
   --color-accent: #6366f1;
   --color-accent-dim: rgba(99, 102, 241, 0.15);
-  
+
   --color-background: #050508;
   --color-foreground: #f8fafc;
   --color-muted: #94a3b8;
@@ -18,13 +18,27 @@
   --animate-pulse-slow: pulse-slow 4s ease-in-out infinite;
 
   @keyframes float {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-10px); }
+
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+
+    50% {
+      transform: translateY(-10px);
+    }
   }
 
   @keyframes pulse-slow {
-    0%, 100% { opacity: 0.3; }
-    50% { opacity: 0.6; }
+
+    0%,
+    100% {
+      opacity: 0.3;
+    }
+
+    50% {
+      opacity: 0.6;
+    }
   }
 }
 
@@ -40,9 +54,9 @@
 body {
   background-color: var(--background);
   background-image:
-    radial-gradient(ellipse 90% 60% at 50% -5%,  rgba(99, 102, 241, 0.22) 0%, transparent 65%),
-    radial-gradient(ellipse 60% 50% at 10% 60%,  rgba(109, 40, 217, 0.14) 0%, transparent 60%),
-    radial-gradient(ellipse 50% 40% at 85% 80%,  rgba(67, 56, 202, 0.12) 0%, transparent 55%);
+    radial-gradient(ellipse 90% 60% at 50% -5%, rgba(99, 102, 241, 0.22) 0%, transparent 65%),
+    radial-gradient(ellipse 60% 50% at 10% 60%, rgba(109, 40, 217, 0.14) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 40% at 85% 80%, rgba(67, 56, 202, 0.12) 0%, transparent 55%);
   color: var(--foreground);
   font-family: var(--font-body), ui-sans-serif, system-ui;
   -webkit-font-smoothing: antialiased;
@@ -83,21 +97,21 @@ body::after {
 
 @utility card-glow-border {
   position: relative;
+
   &::before {
     content: "";
     position: absolute;
     inset: -1px;
     border-radius: 3rem;
-    background: conic-gradient(
-      from var(--angle, 0deg),
-      transparent 20%,
-      rgba(99, 102, 241, 0.6) 40%,
-      transparent 60%
-    );
+    background: conic-gradient(from var(--angle, 0deg),
+        transparent 20%,
+        rgba(99, 102, 241, 0.6) 40%,
+        transparent 60%);
     opacity: 0;
     transition: opacity 0.5s ease;
     z-index: -1;
   }
+
   &:hover::before {
     opacity: 1;
     animation: spin-border 3s linear infinite;
@@ -111,12 +125,15 @@ body::after {
 }
 
 @keyframes spin-border {
-  to { --angle: 360deg; }
+  to {
+    --angle: 360deg;
+  }
 }
 
 @utility scanline {
   position: relative;
   overflow: hidden;
+
   &::before {
     content: "";
     position: absolute;
@@ -130,17 +147,39 @@ body::after {
 }
 
 @keyframes scan {
-  from { transform: translateY(-100%); }
-  to { transform: translateY(100%); }
+  from {
+    transform: translateY(-100%);
+  }
+
+  to {
+    transform: translateY(100%);
+  }
 }
 
 @keyframes glitch {
-  0% { transform: translate(0); }
-  20% { transform: translate(-2px, 2px); }
-  40% { transform: translate(-2px, -2px); }
-  60% { transform: translate(2px, 2px); }
-  80% { transform: translate(2px, -2px); }
-  100% { transform: translate(0); }
+  0% {
+    transform: translate(0);
+  }
+
+  20% {
+    transform: translate(-2px, 2px);
+  }
+
+  40% {
+    transform: translate(-2px, -2px);
+  }
+
+  60% {
+    transform: translate(2px, 2px);
+  }
+
+  80% {
+    transform: translate(2px, -2px);
+  }
+
+  100% {
+    transform: translate(0);
+  }
 }
 
 .glitch-hover:hover {
@@ -172,8 +211,14 @@ body::after {
 
 /* Hide cursor on small screens */
 @media (max-width: 768px) {
-  * { cursor: auto; }
-  .custom-cursor, .custom-cursor-follower { display: none; }
+  * {
+    cursor: auto;
+  }
+
+  .custom-cursor,
+  .custom-cursor-follower {
+    display: none;
+  }
 }
 
 /* Custom Scrollbar */

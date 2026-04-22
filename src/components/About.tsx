@@ -5,8 +5,8 @@ import { useEffect, useRef, useState } from "react";
 import dynamic from "next/dynamic";
 import { siteConfig } from "@/lib/data";
 
-// Dynamically import TechOrb (SSR off — Three.js needs browser)
-const TechOrb = dynamic(() => import("./TechOrb"), { ssr: false });
+// Dynamically import TechOrbit (SSR off — Three.js needs browser)
+const TechOrb = dynamic(() => import("./TechOrbit"), { ssr: false });
 
 /* ─── Animated CountUp hook ─────────────────────────────────────────────── */
 function useCountUp(target: number, duration = 2000) {

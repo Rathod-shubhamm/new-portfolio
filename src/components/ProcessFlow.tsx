@@ -1,141 +1,50 @@
-"use client"
+"use client";
 
-import { useRef, useMemo, useEffect, useState } from "react"
-import { motion } from "framer-motion"
-import { Database, Cpu, Zap, Search, MessageSquare, Code } from "lucide-react"
-import { Canvas, useFrame } from "@react-three/fiber"
-import * as THREE from "three"
+import Image from "next/image";
+import { motion } from "framer-motion";
 
-const STEPS = [
-  { icon: Database, label: "Ingestion",   description: "Multi-source data collection & cleaning",  color: "#6366f1" },
-  { icon: Search,   label: "Processing",  description: "Semantic embedding & vector storage",       color: "#22d3ee" },
-  { icon: Cpu,      label: "Reasoning",   description: "LLM Orchestration & RAG retrieval",         color: "#8b5cf6" },
-  { icon: MessageSquare, label: "Action", description: "Autonomous decision making & output",        color: "#afff00" },
-]
+const ARCHITECTURE_NODES = [
+  {
+    id: "01",
+    label: "Ingestion",
+    description: "Signals enter through resilient data infrastructure and clean intake layers.",
+    accent: "from-cyan-400/30 via-cyan-400/10 to-transparent",
+  },
+  {
+    id: "02",
+    label: "Processing",
+    description: "Structured memory, embeddings, and transformation logic make context usable.",
+    accent: "from-violet-400/30 via-violet-400/10 to-transparent",
+  },
+  {
+    id: "03",
+    label: "Reasoning",
+    description: "Models retrieve, synthesize, and evaluate state before committing decisions.",
+    accent: "from-sky-400/30 via-sky-400/10 to-transparent",
+  },
+  {
+    id: "04",
+    label: "Action",
+    description: "Interfaces, tools, and automations convert intelligence into execution.",
+    accent: "from-fuchsia-400/30 via-fuchsia-400/10 to-transparent",
+  },
+] as const;
 
-/* ─── 3D Particle Pipeline Stream ─────────────────────────────────────── */
-const PARTICLE_COUNT = 80
+const PROCESS_FLOW_IMAGE = "/assets/images/process-architecture-lifecycle-v2.png";
 
-function PipelineParticles() {
-  const pointsRef = useRef<THREE.Points>(null!)
-
-  /* Bezier control points spanning the four pipeline nodes */
-  const curve = useMemo(
-    () =>
-      new THREE.CubicBezierCurve3(
-        new THREE.Vector3(-6, 0, 0),
-        new THREE.Vector3(-2, 1.5, 0),
-        new THREE.Vector3(2, -1.5, 0),
-        new THREE.Vector3(6, 0, 0)
-      ),
-    []
-  )
-
-  const data = useMemo(() => {
-    const positions  = new Float32Array(PARTICLE_COUNT * 3)
-    const progresses = new Float32Array(PARTICLE_COUNT)
-    const speeds     = new Float32Array(PARTICLE_COUNT)
-    const offsets    = new Float32Array(PARTICLE_COUNT * 2) // x/y random offset
-
-    for (let i = 0; i < PARTICLE_COUNT; i++) {
-      progresses[i] = Math.random()
-      speeds[i]     = 0.08 + Math.random() * 0.14
-      offsets[i * 2]     = (Math.random() - 0.5) * 0.4
-      offsets[i * 2 + 1] = (Math.random() - 0.5) * 0.4
-    }
-    return { positions, progresses, speeds, offsets }
-  }, [])
-
-  const colors = useMemo(() => {
-    const c = new Float32Array(PARTICLE_COUNT * 3)
-    const palette = [
-      new THREE.Color("#6366f1"),
-      new THREE.Color("#22d3ee"),
-      new THREE.Color("#8b5cf6"),
-      new THREE.Color("#06b6d4"),
-    ]
-    for (let i = 0; i < PARTICLE_COUNT; i++) {
-      const col = palette[i % palette.length]
-      c[i * 3]     = col.r
-      c[i * 3 + 1] = col.g
-      c[i * 3 + 2] = col.b
-    }
-    return c
-  }, [])
-
-  useFrame((_, delta) => {
-    if (!pointsRef.current) return
-    const { positions, progresses, speeds, offsets } = data
-
-    for (let i = 0; i < PARTICLE_COUNT; i++) {
-      progresses[i] = (progresses[i] + speeds[i] * delta) % 1
-      const pt = curve.getPoint(progresses[i])
-      positions[i * 3]     = pt.x + offsets[i * 2]
-      positions[i * 3 + 1] = pt.y + offsets[i * 2 + 1]
-      positions[i * 3 + 2] = pt.z
-    }
-
-    pointsRef.current.geometry.attributes.position.needsUpdate = true
-  })
-
-  return (
-    <points ref={pointsRef}>
-      <bufferGeometry>
-        <bufferAttribute
-          attach="attributes-position"
-          count={PARTICLE_COUNT}
-          array={data.positions}
-          itemSize={3}
-          // @ts-ignore
-          args={[data.positions, 3]}
-        />
-        <bufferAttribute
-          attach="attributes-color"
-          count={PARTICLE_COUNT}
-          array={colors}
-          itemSize={3}
-          // @ts-ignore
-          args={[colors, 3]}
-        />
-      </bufferGeometry>
-      <pointsMaterial
-        size={0.12}
-        vertexColors
-        transparent
-        opacity={0.9}
-        sizeAttenuation
-        blending={THREE.AdditiveBlending}
-        depthWrite={false}
-      />
-    </points>
-  )
-}
-
-function PipelineCanvas() {
-  return (
-    <div className="absolute inset-0 pointer-events-none hidden md:block">
-      <Canvas
-        camera={{ position: [0, 0, 9], fov: 55 }}
-        gl={{ antialias: false, alpha: true }}
-        dpr={[1, 1]}
-      >
-        <PipelineParticles />
-      </Canvas>
-    </div>
-  )
-}
-
-/* ─── Main Section ──────────────────────────────────────────────────────── */
 export default function ProcessFlow() {
   return (
     <section className="py-32 bg-background relative overflow-hidden">
+      <div className="absolute top-24 left-1/2 h-72 w-72 -translate-x-1/2 rounded-full bg-cyan-400/6 blur-[120px] pointer-events-none" />
+      <div className="absolute right-0 top-1/3 h-96 w-96 rounded-full bg-violet-500/8 blur-[140px] pointer-events-none" />
+
       <div className="container mx-auto px-6">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 1 }}
-          className="text-center mb-24"
+          className="text-center mb-16 md:mb-20"
         >
           <span className="text-[10px] uppercase tracking-[0.4em] font-medium text-accent">
             Engineering Lifecycle
@@ -143,93 +52,70 @@ export default function ProcessFlow() {
           <h2 className="text-4xl md:text-7xl font-bold font-display mt-4 text-white">
             How I <span className="text-white/40">Architect</span> Intelligence
           </h2>
+          <p className="max-w-3xl mx-auto mt-6 text-base md:text-lg text-slate-400 leading-relaxed">
+            A systems view of how raw signals become durable memory, model reasoning,
+            and autonomous execution.
+          </p>
         </motion.div>
 
         <div className="relative max-w-6xl mx-auto">
-          {/* 3D Pipeline Canvas — sits behind step cards */}
-          <div className="absolute inset-x-0 top-0 h-48 md:block hidden" style={{ zIndex: 0 }}>
-            <PipelineCanvas />
-          </div>
+          <div className="absolute inset-x-10 top-1/2 h-px -translate-y-1/2 bg-gradient-to-r from-transparent via-cyan-400/30 to-transparent blur-sm pointer-events-none" />
 
-          {/* Connecting line fallback */}
-          <div className="absolute top-[40px] left-0 right-0 h-px bg-gradient-to-r from-transparent via-accent/20 to-transparent hidden md:block" />
+          <motion.div
+            initial={{ opacity: 0, y: 40, scale: 0.98 }}
+            whileInView={{ opacity: 1, y: 0, scale: 1 }}
+            viewport={{ once: true, margin: "-120px" }}
+            transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
+            className="relative overflow-hidden rounded-[2.75rem] border border-white/10 bg-[#071127]/80 shadow-[0_0_90px_rgba(34,211,238,0.08)]"
+          >
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(34,211,238,0.12),transparent_45%),radial-gradient(circle_at_80%_70%,rgba(168,85,247,0.14),transparent_35%)] pointer-events-none" />
+            <div className="absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-white/8 to-transparent pointer-events-none" />
+            <div className="absolute inset-0 rounded-[2.75rem] border border-white/5 pointer-events-none" />
 
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-12 relative z-10">
-            {STEPS.map((step, i) => (
+            <div className="relative aspect-[21/10] sm:aspect-[21/9] lg:aspect-[21/8]">
+              <Image
+                src={PROCESS_FLOW_IMAGE}
+                alt="Isometric AI lifecycle illustration showing ingestion, processing, reasoning, and action connected by glowing data lines."
+                fill
+                quality={95}
+                sizes="(max-width: 768px) 100vw, (max-width: 1280px) 92vw, 1200px"
+                className="object-cover object-center"
+              />
+              <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-[#06091a]/10 pointer-events-none" />
+            </div>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 24 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.15, duration: 0.8 }}
+            className="mt-8 grid grid-cols-1 md:grid-cols-4 gap-4"
+          >
+            {ARCHITECTURE_NODES.map((node, index) => (
               <motion.div
-                key={step.label}
-                initial={{ opacity: 0, y: 30 }}
+                key={node.label}
+                initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ delay: i * 0.2, duration: 0.8 }}
-                className="group relative"
+                transition={{ delay: 0.15 + index * 0.1, duration: 0.6 }}
+                className="glass relative overflow-hidden rounded-[1.75rem] border-white/8 px-6 py-5"
               >
-                <div className="flex flex-col items-center text-center space-y-6">
-                  <motion.div
-                    whileHover={{ scale: 1.12, rotate: 6 }}
-                    style={{ boxShadow: `0 0 0 0 ${step.color}` }}
-                    whileInView={{ boxShadow: [`0 0 0 0 ${step.color}22`, `0 0 20px 2px ${step.color}22`, `0 0 0 0 ${step.color}22`] }}
-                    transition={{ duration: 2, repeat: Infinity, delay: i * 0.3 }}
-                    className="w-20 h-20 rounded-3xl glass border-white/5 flex items-center justify-center relative group-hover:border-accent/40 transition-all duration-500 shadow-2xl"
-                  >
-                    <step.icon className="w-8 h-8 text-white group-hover:text-accent transition-colors duration-500" />
-                    {i < STEPS.length - 1 && (
-                      <motion.div
-                        animate={{ x: [0, 20, 0], opacity: [0.2, 0.7, 0.2] }}
-                        transition={{ duration: 1.8, repeat: Infinity, delay: i * 0.2 }}
-                        className="absolute -right-6 top-1/2 -translate-y-1/2 hidden md:block"
-                      >
-                        <Zap className="w-4 h-4 text-accent/50" />
-                      </motion.div>
-                    )}
-                  </motion.div>
-
-                  <div className="space-y-2">
-                    <div className="text-[10px] font-mono text-slate-600 uppercase tracking-[0.3em]">
-                      0{i + 1}
-                    </div>
-                    <h3 className="text-xl font-bold font-display uppercase tracking-widest text-white group-hover:text-accent transition-colors">
-                      {step.label}
-                    </h3>
-                    <p className="text-[11px] font-medium text-slate-500 uppercase tracking-wider leading-relaxed px-4">
-                      {step.description}
-                    </p>
-                  </div>
+                <div className={`absolute inset-x-0 top-0 h-px bg-gradient-to-r ${node.accent}`} />
+                <div className="text-[10px] font-mono uppercase tracking-[0.3em] text-slate-500">
+                  {node.id}
                 </div>
+                <h3 className="mt-3 text-lg font-display font-bold uppercase tracking-[0.18em] text-white">
+                  {node.label}
+                </h3>
+                <p className="mt-3 text-sm leading-relaxed text-slate-400">
+                  {node.description}
+                </p>
               </motion.div>
             ))}
-          </div>
-
-          {/* Technical detail bar */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-            transition={{ delay: 1, duration: 1 }}
-            className="mt-24 glass border-white/5 rounded-3xl p-8 md:p-12 flex flex-col md:flex-row items-center justify-between gap-8 group"
-          >
-            <div className="flex items-center gap-6">
-              <div className="w-12 h-12 rounded-full bg-accent/10 flex items-center justify-center text-accent">
-                <Code className="w-6 h-6" />
-              </div>
-              <div>
-                <h4 className="text-sm font-bold uppercase tracking-widest text-white">Full-Stack Autonomy</h4>
-                <p className="text-xs text-slate-500 uppercase tracking-widest mt-1">
-                  Optimizing the recursive feedback loop for agentic workflows.
-                </p>
-              </div>
-            </div>
-            <div className="flex gap-4">
-              <div className="px-5 py-2 glass border-white/5 rounded-full text-[9px] font-bold uppercase tracking-widest text-slate-400 group-hover:border-accent/30 transition-all">
-                Latency: {"<"} 50ms
-              </div>
-              <div className="px-5 py-2 glass border-white/5 rounded-full text-[9px] font-bold uppercase tracking-widest text-slate-400 group-hover:border-accent/30 transition-all">
-                Recall: 99.2%
-              </div>
-            </div>
           </motion.div>
         </div>
       </div>
     </section>
-  )
+  );
 }
