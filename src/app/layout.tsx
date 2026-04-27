@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Syne, DM_Sans, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
-import { SmoothScroll, CustomCursor } from "@/components/Providers";
+import { SmoothScroll, ThemeProvider } from "@/components/Providers";
 
 const syne = Syne({
   variable: "--font-display",
@@ -41,12 +41,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="dark">
+    <html lang="en" suppressHydrationWarning>
       <body className={`${syne.variable} ${dmSans.variable} ${jetbrainsMono.variable} antialiased font-body`}>
-        <CustomCursor />
-        <SmoothScroll>
-          {children}
-        </SmoothScroll>
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+          <SmoothScroll>
+            {children}
+          </SmoothScroll>
+        </ThemeProvider>
       </body>
     </html>
   );
