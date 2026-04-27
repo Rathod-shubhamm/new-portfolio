@@ -17,6 +17,7 @@
  */
 
 import { useEffect, useRef } from "react";
+import { MotionValue } from "framer-motion";
 
 // ─── Tuneable constants ────────────────────────────────────────────────────────
 //  Adjust these to change feel without touching any logic.
@@ -25,30 +26,30 @@ const CFG = {
   // ── Sampling ──────────────────────────────────────────────────────────────
   stepNormal: 3,           // pixel stride when sampling text mask (normal)
   stepCompact: 4,          // pixel stride (compact)
-  maxParticles: 14000,     // hard cap (uniform-stride thinned if exceeded)
+  maxParticles: 15000,     // hard cap (uniform-stride thinned if exceeded)
 
   // ── Cursor influence ──────────────────────────────────────────────────────
-  radius: 180,             // px — total influence zone
+  radius: 80,              // px — total influence zone
   /** Cursor velocity smoothing (lerp per frame). Lower = heavier/smoother. */
   velocitySmoothing: 0.22,
 
   // ── Force magnitudes ──────────────────────────────────────────────────────
   /** A — Weak radial outward push (clears the cursor zone) */
-  radialStrength: 1.8,
+  radialStrength: 1.0,
   /** B — Directional: particles dragged along cursor velocity */
-  directionalStrength: 7.5,
+  directionalStrength: 3.5,
   /** C — Perpendicular swirl: vortex / liquid streak */
-  swirlStrength: 4.2,
+  swirlStrength: 1.8,
   /** How much cursor speed amplifies all forces (multiplicative) */
-  speedAmplitude: 0.18,
+  speedAmplitude: 0.10,
   /** Minimum cursor speed (px/frame) before directional forces kick in */
   minSpeed: 0.8,
 
   // ── Physics ───────────────────────────────────────────────────────────────
-  damping: 0.94,           // higher = particles coast longer before settling
-  stiffness: 0.008,        // very soft spring — particles drift freely, not elastic
+  damping: 0.92,           // slightly more coasting for smoother return
+  stiffness: 0.015,        // soft spring — letters hold shape, particles drift back gently
   /** Max particle speed (px/frame) — prevents chaotic explosion */
-  maxSpeed: 18,
+  maxSpeed: 10,
   /** Tiny per-frame noise keeping at-rest particles from looking frozen */
   noiseAmp: 0.04,
 
@@ -83,8 +84,8 @@ class FluidParticle {
   readonly nPhase: number;
 
   constructor(x: number, y: number) {
-    this.x = x;   this.ox = x;
-    this.y = y;   this.oy = y;
+    this.x = x; this.ox = x;
+    this.y = y; this.oy = y;
     this.nPhase = Math.random() * Math.PI * 2;
   }
 
@@ -195,9 +196,9 @@ class FluidParticle {
 
 // ─── Utility ───────────────────────────────────────────────────────────────────
 
-function getForegroundColor(): string {
+function getThemeColor(variable: string): string {
   const raw = getComputedStyle(document.documentElement)
-    .getPropertyValue("--foreground")
+    .getPropertyValue(variable)
     .trim();
   if (raw.startsWith("#") && raw.length >= 7) {
     const r = parseInt(raw.slice(1, 3), 16);
@@ -217,6 +218,7 @@ type SandParticleTextProps = {
   className?: string;
   compact?: boolean;
   fontScale?: number;
+  invertColor?: boolean;
 };
 
 export default function SandParticleText({
@@ -224,6 +226,7 @@ export default function SandParticleText({
   className = "",
   compact = false,
   fontScale,
+  invertColor = false,
 }: SandParticleTextProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const resolvedFontScale = fontScale ?? (compact ? 0.22 : 0.18);
@@ -242,13 +245,13 @@ export default function SandParticleText({
     let raf = 0;
     let frame = 0;
     let particles: FluidParticle[] = [];
-    let particleColor = getForegroundColor();
+    let particleColor = getThemeColor(invertColor ? "--background" : "--foreground");
 
     // ── Pointer state ─────────────────────────────────────────────────────────
     // We track raw position + smoothed velocity separately so forces feel heavy.
 
-    const rawPtr  = { x: -9999, y: -9999, active: false };
-    const smdVel  = { vx: 0, vy: 0 };   // smoothed (lerped) velocity
+    const rawPtr = { x: -9999, y: -9999, active: false };
+    const smdVel = { vx: 0, vy: 0 };   // smoothed (lerped) velocity
     const prevRaw = { x: -9999, y: -9999 };
 
     // ── Build text mask → particles ───────────────────────────────────────────
@@ -259,20 +262,20 @@ export default function SandParticleText({
       H = Math.max(1, Math.floor(rect.height));
       dpr = Math.min(window.devicePixelRatio || 1, 2);
 
-      canvas.width  = Math.floor(W * dpr);
+      canvas.width = Math.floor(W * dpr);
       canvas.height = Math.floor(H * dpr);
-      canvas.style.width  = `${W}px`;
+      canvas.style.width = `${W}px`;
       canvas.style.height = `${H}px`;
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
-      particleColor = getForegroundColor();
+      particleColor = getThemeColor(invertColor ? "--background" : "--foreground");
 
       // Draw text into offscreen canvas (white on transparent — only alpha used)
-      srcCanvas.width  = W;
+      srcCanvas.width = W;
       srcCanvas.height = H;
       srcCtx.clearRect(0, 0, W, H);
       srcCtx.fillStyle = "#ffffff";
-      srcCtx.textAlign    = "center";
+      srcCtx.textAlign = "center";
       srcCtx.textBaseline = "middle";
 
       const lines = text.split("\n");
@@ -302,7 +305,7 @@ export default function SandParticleText({
       lines.forEach((line, i) => srcCtx.fillText(line, W / 2, startY + i * lineH));
 
       // Sample pixel alpha → collect origins
-      const px   = srcCtx.getImageData(0, 0, W, H).data;
+      const px = srcCtx.getImageData(0, 0, W, H).data;
       const step = compact ? CFG.stepCompact : CFG.stepNormal;
       const sampled: [number, number][] = [];
 
@@ -393,7 +396,7 @@ export default function SandParticleText({
     // ── Theme observer ────────────────────────────────────────────────────────
 
     const themeObserver = new MutationObserver(() => {
-      particleColor = getForegroundColor();
+      particleColor = getThemeColor(invertColor ? "--background" : "--foreground");
       buildParticles();
     });
     themeObserver.observe(document.documentElement, {

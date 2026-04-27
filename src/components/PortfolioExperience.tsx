@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { motion } from "framer-motion";
+import { motion, useScroll, useTransform } from "framer-motion";
 import {
   ArrowUpRight,
   BrainCircuit,
@@ -40,6 +40,10 @@ export default function PortfolioExperience() {
     () => projects.filter((project) => activeCategory === "All" || project.category === activeCategory),
     [activeCategory]
   );
+
+  const { scrollY } = useScroll();
+  const heroOpacity = useTransform(scrollY, [0, 400], [1, 0]);
+  const heroScale = useTransform(scrollY, [0, 400], [1, 0.95]);
 
   return (
     <main className="site-shell min-h-screen bg-[var(--background)] text-[var(--foreground)]">
@@ -99,9 +103,13 @@ export default function PortfolioExperience() {
         )}
       </header>
 
-      <section id="top" className="relative isolate min-h-screen overflow-hidden pt-16">
+      <motion.section 
+        id="top" 
+        style={{ opacity: heroOpacity, scale: heroScale }}
+        className="sticky top-0 z-0 flex h-screen flex-col items-center justify-center overflow-hidden pt-16"
+      >
         <HeroParticles className="z-0" />
-        <div className="mx-auto flex min-h-[calc(100vh-4rem)] max-w-7xl flex-col items-center justify-center px-5 py-12 text-center md:px-8 lg:py-16">
+        <div className="mx-auto flex w-full max-w-7xl flex-col items-center justify-center px-5 text-center md:px-8">
           <motion.div
             initial={{ opacity: 0, y: 28 }}
             animate={{ opacity: 1, y: 0 }}
@@ -130,9 +138,24 @@ export default function PortfolioExperience() {
             </div>
           </motion.div>
         </div>
-      </section>
+      </motion.section>
 
-      <section id="profile" className="section-band">
+      <div className="relative z-10 rounded-t-[2.5rem] bg-[var(--background)] shadow-[0_-20px_40px_rgba(0,0,0,0.12)] sm:rounded-t-[3.5rem]">
+        <section className="rounded-t-[2.5rem] bg-[var(--foreground)] px-5 py-28 text-[var(--background)] sm:rounded-t-[3.5rem] md:py-36">
+          <div className="mx-auto max-w-5xl text-center">
+            <motion.h2
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-100px" }}
+              transition={{ duration: 0.7, ease: "easeOut" }}
+              className="font-display text-4xl font-extrabold leading-[1.1] tracking-tight sm:text-5xl md:text-6xl lg:text-7xl"
+            >
+              Turning models into reliable workflows.
+            </motion.h2>
+          </div>
+        </section>
+
+        <section id="profile" className="section-band">
         <div className="section-grid">
           <div>
             <p className="eyebrow">Profile</p>
@@ -166,26 +189,42 @@ export default function PortfolioExperience() {
             <p className="eyebrow">Stack</p>
             <h2 className="section-title">A compact toolkit for intelligent systems.</h2>
           </div>
-          <div className="mt-12 grid grid-cols-1 gap-px overflow-hidden rounded-sm border border-[var(--line)] bg-[var(--line)] md:grid-cols-2 lg:grid-cols-4">
+          <motion.div 
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-50px" }}
+            variants={{
+              visible: {
+                transition: {
+                  staggerChildren: 0.15
+                }
+              }
+            }}
+            className="mt-12 grid grid-cols-1 gap-px overflow-hidden rounded-sm border border-[var(--line)] bg-[var(--line)] md:grid-cols-2 lg:grid-cols-4"
+          >
             {skillClusters.map((cluster, index) => {
               const Icon = capabilityIcons[index] ?? Layers3;
               return (
                 <motion.article
                   key={cluster.title}
-                  initial={{ opacity: 0, y: 18 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.5, delay: index * 0.06 }}
-                  className="min-h-[330px] bg-[var(--background)] p-6"
+                  variants={{
+                    hidden: { opacity: 0, x: 300 },
+                    visible: { 
+                      opacity: 1, 
+                      x: 0, 
+                      transition: { duration: 0.9, ease: [0.16, 1, 0.3, 1] }
+                    }
+                  }}
+                  className="min-h-[330px] bg-white p-6 shadow-sm"
                 >
                   <div className="flex items-center justify-between">
-                    <Icon className="h-6 w-6 text-[var(--accent)]" strokeWidth={1.8} />
-                    <span className="font-mono text-xs text-[var(--muted)]">0{index + 1}</span>
+                    <Icon className="h-6 w-6 text-black" strokeWidth={1.8} />
+                    <span className="font-mono text-xs text-gray-400">0{index + 1}</span>
                   </div>
-                  <h3 className="mt-10 text-xl font-bold text-[var(--foreground)]">{cluster.title}</h3>
+                  <h3 className="mt-10 text-xl font-bold text-black">{cluster.title}</h3>
                   <div className="mt-7 flex flex-wrap gap-2">
                     {cluster.skills.map((skill) => (
-                      <span key={skill} className="rounded-sm border border-[var(--line)] px-3 py-2 text-xs font-semibold text-[var(--muted)]">
+                      <span key={skill} className="rounded-sm border border-gray-200 bg-gray-50/50 px-3 py-2 text-xs font-semibold text-gray-600">
                         {skill}
                       </span>
                     ))}
@@ -193,7 +232,7 @@ export default function PortfolioExperience() {
                 </motion.article>
               );
             })}
-          </div>
+          </motion.div>
         </div>
       </section>
 
@@ -232,15 +271,29 @@ export default function PortfolioExperience() {
                 transition={{ duration: 0.5, delay: index * 0.04 }}
                 className="project-row group"
               >
-                <div className="relative min-h-[260px] overflow-hidden md:min-h-[320px]">
-                  <Image
-                    src={project.image}
-                    alt={project.title}
-                    fill
-                    sizes="(max-width: 768px) 100vw, 38vw"
-                    className="object-cover opacity-80 transition duration-700 group-hover:scale-[1.04] group-hover:opacity-100"
-                  />
-                </div>
+                <motion.div 
+                  className="relative h-full min-h-[260px] w-full overflow-hidden md:min-h-[320px]"
+                  initial={{ clipPath: "inset(15% 0 15% 0)" }}
+                  whileInView={{ clipPath: "inset(0% 0 0% 0)" }}
+                  viewport={{ once: true, margin: "-100px" }}
+                  transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
+                >
+                  <motion.div
+                     initial={{ scale: 1.15 }}
+                     whileInView={{ scale: 1 }}
+                     viewport={{ once: true, margin: "-100px" }}
+                     transition={{ duration: 1.2, ease: "easeOut" }}
+                     className="absolute inset-0 h-full w-full"
+                  >
+                    <Image
+                      src={project.image}
+                      alt={project.title}
+                      fill
+                      sizes="(max-width: 768px) 100vw, 38vw"
+                      className="object-cover opacity-80 transition duration-700 group-hover:scale-[1.04] group-hover:opacity-100"
+                    />
+                  </motion.div>
+                </motion.div>
                 <div className="flex flex-col justify-between p-6 md:p-8">
                   <div>
                     <div className="flex items-center justify-between gap-4">
@@ -301,12 +354,19 @@ export default function PortfolioExperience() {
               ["02", "Model", "Choose retrieval, prompts, tools, and evaluation loops around measurable user outcomes."],
               ["03", "Ship", "Build the API, worker, database, and interface layers needed to keep the workflow observable."],
               ["04", "Tighten", "Use logs and user behavior to reduce latency, cost, hallucination risk, and operational noise."],
-            ].map(([id, title, copy]) => (
-              <div key={id} className="bg-[var(--background)] p-7">
+            ].map(([id, title, copy], index) => (
+              <motion.div 
+                key={id} 
+                className="bg-[var(--background)] p-7"
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-50px" }}
+                transition={{ duration: 0.5, delay: index * 0.1, ease: "easeOut" }}
+              >
                 <p className="font-mono text-xs text-[var(--accent)]">{id}</p>
                 <h3 className="mt-4 text-2xl font-bold text-[var(--foreground)]">{title}</h3>
                 <p className="mt-3 text-base leading-7 text-[var(--muted)]">{copy}</p>
-              </div>
+              </motion.div>
             ))}
           </div>
         </div>
@@ -317,8 +377,15 @@ export default function PortfolioExperience() {
           <p className="eyebrow">Timeline</p>
           <h2 className="section-title max-w-4xl">Experience across applied AI, consulting, and formal AI education.</h2>
           <div className="mt-12 border-l border-[var(--line)]">
-            {experience.map((item) => (
-              <article key={item.company} className="relative pb-12 pl-8 last:pb-0">
+            {experience.map((item, index) => (
+              <motion.article 
+                key={item.company} 
+                className="relative pb-12 pl-8 last:pb-0"
+                initial={{ opacity: 0, x: -15 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true, margin: "-50px" }}
+                transition={{ duration: 0.5, delay: index * 0.1, ease: "easeOut" }}
+              >
                 <span className="absolute -left-[5px] top-2 h-2.5 w-2.5 rounded-full bg-[var(--accent)]" />
                 <p className="font-mono text-xs uppercase tracking-[0.16em] text-[var(--muted)]">{item.period}</p>
                 <h3 className="mt-3 text-2xl font-extrabold text-[var(--foreground)]">{item.company}</h3>
@@ -331,7 +398,7 @@ export default function PortfolioExperience() {
                     </li>
                   ))}
                 </ul>
-              </article>
+              </motion.article>
             ))}
           </div>
         </div>
@@ -341,9 +408,15 @@ export default function PortfolioExperience() {
         <div className="mx-auto grid max-w-7xl gap-10 md:grid-cols-[1fr_auto] md:items-end">
           <div>
             <p className="eyebrow">Contact</p>
-            <h2 className="mt-4 max-w-4xl font-display text-5xl font-extrabold leading-none text-[var(--foreground)] md:text-7xl">
+            <motion.h2 
+              initial={{ opacity: 0, y: 30, scale: 0.98 }}
+              whileInView={{ opacity: 1, y: 0, scale: 1 }}
+              viewport={{ once: true, margin: "-50px" }}
+              transition={{ duration: 0.8, ease: "easeOut" }}
+              className="mt-4 max-w-4xl font-display text-5xl font-extrabold leading-none text-[var(--foreground)] md:text-7xl"
+            >
               Let&apos;s build a sharper AI workflow.
-            </h2>
+            </motion.h2>
             <a href={`mailto:${siteConfig.email}`} className="mt-8 inline-flex text-lg font-semibold text-[var(--accent)]">
               {siteConfig.email}
             </a>
@@ -361,6 +434,7 @@ export default function PortfolioExperience() {
           </div>
         </div>
       </footer>
+      </div>
     </main>
   );
 }
