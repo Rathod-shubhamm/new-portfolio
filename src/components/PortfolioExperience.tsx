@@ -215,16 +215,16 @@ export default function PortfolioExperience() {
                       transition: { duration: 0.9, ease: [0.16, 1, 0.3, 1] }
                     }
                   }}
-                  className="min-h-[330px] bg-white p-6 shadow-sm"
+                  className="min-h-[330px] bg-[var(--foreground)] p-6 shadow-sm"
                 >
                   <div className="flex items-center justify-between">
-                    <Icon className="h-6 w-6 text-black" strokeWidth={1.8} />
-                    <span className="font-mono text-xs text-gray-400">0{index + 1}</span>
+                    <Icon className="h-6 w-6 text-[var(--background)]" strokeWidth={1.8} />
+                    <span className="font-mono text-xs text-[var(--background)] opacity-60">0{index + 1}</span>
                   </div>
-                  <h3 className="mt-10 text-xl font-bold text-black">{cluster.title}</h3>
+                  <h3 className="mt-10 text-xl font-bold text-[var(--background)]">{cluster.title}</h3>
                   <div className="mt-7 flex flex-wrap gap-2">
                     {cluster.skills.map((skill) => (
-                      <span key={skill} className="rounded-sm border border-gray-200 bg-gray-50/50 px-3 py-2 text-xs font-semibold text-gray-600">
+                      <span key={skill} className="rounded-sm border border-[var(--background)]/20 bg-[var(--background)] px-3 py-2 text-xs font-semibold text-[var(--foreground)] bg-opacity-10 border-opacity-20">
                         {skill}
                       </span>
                     ))}
@@ -357,15 +357,15 @@ export default function PortfolioExperience() {
             ].map(([id, title, copy], index) => (
               <motion.div 
                 key={id} 
-                className="bg-white p-7"
+                className="bg-[var(--foreground)] p-7"
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-50px" }}
                 transition={{ duration: 0.5, delay: index * 0.1, ease: "easeOut" }}
               >
-                <p className="font-mono text-xs text-gray-400">{id}</p>
-                <h3 className="mt-4 text-2xl font-bold text-black">{title}</h3>
-                <p className="mt-3 text-base leading-7 text-gray-600">{copy}</p>
+                <p className="font-mono text-xs text-[var(--background)] opacity-60">{id}</p>
+                <h3 className="mt-4 text-2xl font-bold text-[var(--background)]">{title}</h3>
+                <p className="mt-3 text-base leading-7 text-[var(--background)] opacity-80">{copy}</p>
               </motion.div>
             ))}
           </div>
@@ -441,9 +441,9 @@ export default function PortfolioExperience() {
 
 function Spec({ label, value }: { label: string; value: string }) {
   return (
-    <div className="bg-[var(--background)] p-4">
-      <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-[var(--muted)]">{label}</p>
-      <p className="mt-2 text-sm font-semibold leading-5 text-[var(--foreground)]">{value}</p>
+    <div className="bg-[var(--foreground)] p-4">
+      <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-[var(--background)] opacity-60">{label}</p>
+      <p className="mt-2 text-sm font-semibold leading-5 text-[var(--background)]">{value}</p>
     </div>
   );
 }

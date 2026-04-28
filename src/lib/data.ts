@@ -118,8 +118,8 @@ export const skillClusters = [
 export const experience = [
   {
     company: "Apexneural Pvt Ltd",
-    role: "AI Context Engineer",
-    period: "Aug 2025 – Present",
+    role: "AI  Engineer",
+    period: "Aug 2025 ",
     description: "Building intelligent automation systems, LLM pipelines, and full-stack AI products. Working across multi-agent orchestration, computer vision, data engineering, and scalable ML infrastructure.",
     achievements: [
       "Built a multi-platform social media automation system using GPT-4 & Stable Diffusion — publishing 10,000+ posts/month across Instagram, Twitter & LinkedIn for 100+ accounts with 99.2% uptime",
@@ -140,7 +140,7 @@ export const experience = [
     company: "BlinkCare",
     role: "Technical Advisor & Consultant",
     period: "Late 2025 – Present",
-    description: "Served as an independent technical consultant for BlinkCare (blinkcare.co.in), a healthcare-focused startup. Advised on tech stack selection, system architecture, and business strategy to help lay the foundation for a scalable product.",
+    description: "Served as an independent technical consultant for BlinkCare (blinkcare.co.in), a quick commerce-focused startup providing househelp and bluecolor service providers under 15 minutes. Advised on tech stack selection, system architecture, and business strategy to help lay the foundation for a scalable product.",
     achievements: [
       "Guided tech stack selection & architecture decisions",
       "Advised on product strategy and go-to-market approach",
@@ -152,6 +152,6 @@ export const experience = [
     role: "Computer Science Graduate",
     period: "2021 – 2026",
     description: "Integrated MTech in Artificial Intelligence at VIT Bhopal. Focused on AI/ML research and software engineering principles.",
-    achievements: ["Class representative", "Developed 5+ major AI/ML projects", "CGPA: 7.79"],
+    achievements: ["Class representative", "Developed 5+ major AI/ML projects", "CGPA: 8.24"],
   },
 ];
