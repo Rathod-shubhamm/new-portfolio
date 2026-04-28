@@ -357,15 +357,15 @@ export default function PortfolioExperience() {
             ].map(([id, title, copy], index) => (
               <motion.div 
                 key={id} 
-                className="bg-[var(--background)] p-7"
+                className="bg-white p-7"
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-50px" }}
                 transition={{ duration: 0.5, delay: index * 0.1, ease: "easeOut" }}
               >
-                <p className="font-mono text-xs text-[var(--accent)]">{id}</p>
-                <h3 className="mt-4 text-2xl font-bold text-[var(--foreground)]">{title}</h3>
-                <p className="mt-3 text-base leading-7 text-[var(--muted)]">{copy}</p>
+                <p className="font-mono text-xs text-gray-400">{id}</p>
+                <h3 className="mt-4 text-2xl font-bold text-black">{title}</h3>
+                <p className="mt-3 text-base leading-7 text-gray-600">{copy}</p>
               </motion.div>
             ))}
           </div>
